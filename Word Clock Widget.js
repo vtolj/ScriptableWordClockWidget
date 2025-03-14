@@ -548,6 +548,7 @@ function getHighlightedWords() {
  * background image. Persist in cache.
  */ 
 async function setBackground() {
+  widget_config.background_image = "image.jpg";
   if (widget_config.background_image) {
     const rx_url = /(((ftp|http|https):\/\/)|(\/)|(..\/))(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
     if ((rx_url.exec(widget_config.background_image)) !== null) {
@@ -573,14 +574,14 @@ async function setBackground() {
     } else {
       // no url found > checking icloud
       // Determine if our image exists
+      // iCloud Directory Path
       const files = FileManager.iCloud();
-      const path = files.joinPath(
-        files.documentsDirectory(), 
-        widget_config.background_image
-      );
+      const iCloudPath = files.joinPath(files.documentsDirectory(), "iCloud");
+      const path = files.joinPath(iCloudPath, widget_config.background_image);
       const exists = files.fileExists(path);
 
       if (exists) {
+        await files.downloadFileFromiCloud(path); // Ensure file is downloaded
         widget.backgroundImage = files.readImage(path);
       } else {
         throw new Error("file not found: " + widget_config.background_image)
