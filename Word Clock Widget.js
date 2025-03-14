@@ -546,53 +546,53 @@ function getHighlightedWords() {
  * 
  * If running in the app, prompt the user to select a 
  * background image. Persist in cache.
- */ 
+ */
 async function setBackground() {
   widget_config.background_image = "image.jpg";
+
   if (widget_config.background_image) {
     const rx_url = /(((ftp|http|https):\/\/)|(\/)|(..\/))(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+
     if ((rx_url.exec(widget_config.background_image)) !== null) {
-      // url found > getting image from url
+      // URL Found > Download image from URL
       const image_url = widget_config.background_image;
-      var rx_file_name = /\w*(\.)\w*$/gm;
-      var image_name = "wordclock_" + rx_file_name.exec(image_url)[0];
+      const rx_file_name = /\w*(\.)\w*$/gm;
+      const image_name = "wordclock_" + rx_file_name.exec(image_url)[0];
+
       const files = FileManager.local();
-      const path = files.joinPath(
-        files.documentsDirectory(), 
-        image_name
-      );
-      console.log(path)
+      const path = files.joinPath(files.documentsDirectory(), image_name);
+
+      console.log(`Checking for file at path: ${path}`);
       const exists = files.fileExists(path);
+
       if (!exists || !config.runsInWidget) {
-        const req = new Request(image_url)
-        const img = await req[`loadImage`](image_url)
+        const req = new Request(image_url);
+        const img = await req.loadImage();
         widget.backgroundImage = img;
         files.writeImage(path, img);
       } else {
         widget.backgroundImage = files.readImage(path);
       }
-    } else {
-      // no url found > checking icloud
-      // Determine if our image exists
-      // iCloud Directory Path
-      const files = FileManager.iCloud();
-      const iCloudPath = files.joinPath(files.documentsDirectory(), "iCloud");
-      const path = files.joinPath(iCloudPath, widget_config.background_image);
-      const exists = files.fileExists(path);
 
-      if (exists) {
-        await files.downloadFileFromiCloud(path); // Ensure file is downloaded
+    } else {
+      // No URL Found > Checking iCloud Storage
+      const files = FileManager.iCloud();
+      const path = files.joinPath(files.documentsDirectory(), widget_config.background_image);
+
+      console.log(`Checking iCloud file at path: ${path}`);
+      await files.downloadFileFromiCloud(path); // Ensures iCloud sync is complete
+
+      if (files.fileExists(path)) {
         widget.backgroundImage = files.readImage(path);
       } else {
-        throw new Error("file not found: " + widget_config.background_image)
+        console.error(`❗ File not found at path: ${path}`);
+        throw new Error("file not found: " + widget_config.background_image);
       }
     }
   } else {
-    
-    // COLOR BACKGROUND
-
-    var bgColor = new LinearGradient();
-    bgColor.colors = widget_config.backgroundColor
+    // COLOR BACKGROUND (fallback option)
+    const bgColor = new LinearGradient();
+    bgColor.colors = widget_config.backgroundColor;
     bgColor.locations = widget_config.backgroundGradientValue;
     widget.backgroundGradient = bgColor;
   }
