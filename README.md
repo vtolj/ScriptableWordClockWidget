@@ -144,3 +144,16 @@ If you set the widget "When Interacting" to "Run Script" it will update it when 
 
 
 You can also use the DOT face, that only updates once every hour so should be always display the right hour.
+
+This code visualizes GitHub contributions as a heatmap directly on your iOS lock screen (via Scriptable).
+
+Time Range Covered
+
+The code fetches the most recent 16 weeks (about 4 months) of contributions from your GitHub profile. Specifically:
+•	The COLUMNS = 16 setting controls how many weeks are displayed. Since each column represents one week, this equals 16 weeks of contributions.
+•	The ROWS = 7 setting controls the days of the week (Monday to Sunday).
+
+Summary
+•	Time range: ~4 months (most recent 16 weeks)
+•	Data shown: Number of contributions per day
+•	Color intensity: Darker/Brighter squares indicate higher contributions
