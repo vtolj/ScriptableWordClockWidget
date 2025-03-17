@@ -1,6 +1,3 @@
-// This Scriptable uses the Cache module by @evandcoleman
-// https://github.com/yaylinda/scriptable/blob/main/Cache.js
-// For a detailed guide on importing modules, visit https://docs.scriptable.app/importmodule/
 const Cache = importModule('Cache');
 const cache = new Cache('github-heatmap');
 
@@ -15,8 +12,8 @@ if (!GITHUB_TOKEN) {
 
 // New Layout Configuration for Full Widget Coverage
 const DAY_COLOR = config.runsInAccessoryWidget ? "#ffffff" : null;
-const COLUMNS = 25;   // Number of weeks to display
-const ROWS = 10;      // Number of days per week (more than 7 to ensure full coverage)
+const COLUMNS = 25;   // Number of weeks to display - last 6 months
+const ROWS = 7;      // Number of days per week (add more than 7 to ensure full coverage)
 const CELL_SIZE = 10; // Cell size
 const PADDING = 2;
 const BORDER_RADIUS = 2;
